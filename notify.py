@@ -1,3 +1,3 @@
 from playsound import playsound
 
-playsound('./')
+playsound('./notification.mp3')
