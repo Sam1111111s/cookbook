@@ -26,17 +26,26 @@ const app = initializeApp(firebaseConfig)
 export const db = getFirestore(app)
 ```
 
-### Collection reference
+## Collection reference
 ```
 import { collection } from 'firebase/firestore';
 
 collection(db,'collection_name')
 ```
-### get documents data (Read)
+## Get documents data (Read)
 ```
 import { getDocs } from 'firebase/firestore';
 
 const colRef = collection(db,'collection_name')
+
+getDocs(colRef)
+    .then((snapshot)=>{
+        console.log(snapshot)
+    })
+
+
+//////////////////// OR //////////////////////////
+
 getDocs(colRef)
     .then((snapshot)=>{
         let arr = []
@@ -45,17 +54,87 @@ getDocs(colRef)
         })
     })
     .catch(err=>console.log(err))
+ 
 ```
 
-### Adding (Create)
+## Get single document
+>*OnSnapShot is also applicable**
 ```
+import { getDoc,doc } from 'firebase/firestore';
+
+const docRef = doc(db, 'collection_name', 'doc_id')
+
+getDoc(docRef)
+    .then((doc)=>{
+        console.log(doc.data(), doc.id)
+    })
+
 
 ```
-### Deleting 
-```
+
+## Real-time Collection of data (Read)
 
 ```
-### Edit (Update)
+import { onSnapShot } from "firebase/firestore"
+
+const colRef = collection(db,'collection_name')
+
+onSnapShot(colRef),(sanpshot)=>{
+    let arr = []
+    snapshot.docs.forEach((doc)=>{
+        arr.push({...doc.data()})
+    })
+    console.log(arr)
+}
+
+```
+>## Queries, Order (Read)
+```
+import { onSnapshot, query, where, orderBy } from "firebase/firestore"
+
+const colRef = collection(db,'collection_name')
+
+const q = query(colRef,where("param","==","item"), orderBy('param','asc'/'desc'))
+
+onSnapShot(q),(sanpshot)=>{
+    let arr = []
+    snapshot.docs.forEach((doc)=>{
+        arr.push({...doc.data()})
+    })
+    console.log(arr)
+}
+
 ```
 
+
+## Adding (Create)
+```
+import { addDoc } from "firebase/firestore"
+
+const colRef = collection(db,'collection_name')
+addDoc(colRef,{...data})
+    .then(()=>{console.log('added data')})
+    .catch((err)=>{console.log(err)})
+
+```
+## Deleting 
+```
+import { deleteDoc,doc } from "firebase/firestore"
+
+const docRef = doc(db, 'collection_name', doc_id)
+
+deleteDoc(docRef)
+    .then(()=>{console.log('deleted data')})
+    .catch((err)=>{console.log(err)})
+    
+```
+## Edit (Update)
+```
+import { updateDoc,doc } from "firebase/firestore"
+
+const docRef = doc(db, 'collection_name', doc_id)
+
+updateDoc((docRef)=>{...newData})
+    .then(()=>{console.log('updated')})
+    .catch((err)=>{console.log(err)})
 ```
